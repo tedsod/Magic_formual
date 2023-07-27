@@ -1,0 +1,25 @@
+DEBUG    matplotlib data path: /Users/tedsoderberg/Magic_formual/venv/lib/python3.10/site-packages/matplotlib/mpl-data
+DEBUG    CONFIGDIR=/Users/tedsoderberg/.matplotlib
+DEBUG    interactive is False
+DEBUG    platform is darwin
+DEBUG    CACHEDIR=/Users/tedsoderberg/.matplotlib
+DEBUG    Using fontManager instance from /Users/tedsoderberg/.matplotlib/fontlist-v330.json
+DEBUG    Starting new HTTPS connection (1): apiservice.borsdata.se:443
+DEBUG    https://apiservice.borsdata.se:443 "GET /v1/countries?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None
+DEBUG    Starting new HTTPS connection (1): apiservice.borsdata.se:443
+DEBUG    https://apiservice.borsdata.se:443 "GET /v1/sectors?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None
+DEBUG    Starting new HTTPS connection (1): apiservice.borsdata.se:443
+DEBUG    https://apiservice.borsdata.se:443 "GET /v1/markets?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None
+DEBUG    Starting new HTTPS connection (1): apiservice.borsdata.se:443
+DEBUG    https://apiservice.borsdata.se:443 "GET /v1/instruments?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None
+INFO     Number of Companies: 323
+INFO     Index: 1, Name: ABB
+DEBUG    Starting new HTTPS connection (1): apiservice.borsdata.se:443
+DEBUG    https://apiservice.borsdata.se:443 "GET /v1/instruments/1/kpis/36/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None
+ERROR    Error fetching ROIC data for instrument 1: 2019
+DEBUG    Starting new HTTPS connection (1): apiservice.borsdata.se:443
+DEBUG    https://apiservice.borsdata.se:443 "GET /v1/instruments/1/kpis/2/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None
+ERROR    Error fetching Price-to-Earnings data for instrument 1: 2019
+INFO     Index: 3, Name: Addnode
+DEBUG    Starting new HTTPS connection (1): apiservice.borsdata.se:443
+DEBUG    https://apiservice.borsdata.se:443 "GET /v1/instruments/3/kpis/36/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None

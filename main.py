@@ -6,10 +6,10 @@ import pandas as pd
 import json
 import numpy as np
 import logging
-from logger_setup import setup_logger
+from logging_setup import logger
 
 # Call the setup_logger function to get the configured logger
-logger = setup_logger()
+
 
 
 from borsdata.borsdata_client import BorsdataClient
