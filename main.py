@@ -54,7 +54,11 @@ def filter_instruments():
     filtered_instruments = ~instruments['Sector'].isin(not_allowed_sectors)
     instruments = instruments[filtered_instruments]
 
-    #instruments = instruments.head(5)
+
+    filtered_instruments = instruments["Country"] == "Sverige"
+    instruments = instruments[filtered_instruments]
+
+    instruments = instruments.head(5)
 
     logging.info(f"Number of Companies: {len(instruments)}")
 
@@ -87,7 +91,7 @@ def rank_by_magic_formula(df, year):
             PE = pe_history.loc[year].iloc[1]
             EY_LIST.append(1 / PE)
         except Exception as e:
-            logging.error(f"Error fetching Price-to-Earnings data for instrument {index}: {e}")
+            logging.error(f"Error fetching Price-to-Earnings data for instrument: {index}, company: {insId['name']}, {e}")
             EY_LIST.append(None)
 
     df["ROIC"] = ROIC_LIST

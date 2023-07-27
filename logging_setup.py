@@ -18,7 +18,7 @@ def setup_logger():
     streah = logging.StreamHandler()
     
     # Set the log level of the stream handler. In this case, DEBUG
-    streah.setLevel(logging.DEBUG)
+    streah.setLevel(logging.INFO)
     
     # Create formatters
     formatter_color = colorlog.ColoredFormatter(

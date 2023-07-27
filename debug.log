@@ -12,14 +12,31 @@ DEBUG    Starting new HTTPS connection (1): apiservice.borsdata.se:443
 DEBUG    https://apiservice.borsdata.se:443 "GET /v1/markets?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None
 DEBUG    Starting new HTTPS connection (1): apiservice.borsdata.se:443
 DEBUG    https://apiservice.borsdata.se:443 "GET /v1/instruments?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None
-INFO     Number of Companies: 323
-INFO     Index: 1, Name: ABB
+INFO     Number of Companies: 5
+INFO     Index: 459, Name: Cargotec
 DEBUG    Starting new HTTPS connection (1): apiservice.borsdata.se:443
-DEBUG    https://apiservice.borsdata.se:443 "GET /v1/instruments/1/kpis/36/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None
-ERROR    Error fetching ROIC data for instrument 1: 2019
+DEBUG    https://apiservice.borsdata.se:443 "GET /v1/instruments/459/kpis/36/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None
 DEBUG    Starting new HTTPS connection (1): apiservice.borsdata.se:443
-DEBUG    https://apiservice.borsdata.se:443 "GET /v1/instruments/1/kpis/2/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None
-ERROR    Error fetching Price-to-Earnings data for instrument 1: 2019
-INFO     Index: 3, Name: Addnode
+DEBUG    https://apiservice.borsdata.se:443 "GET /v1/instruments/459/kpis/2/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None
+INFO     Index: 461, Name: Elisa
 DEBUG    Starting new HTTPS connection (1): apiservice.borsdata.se:443
-DEBUG    https://apiservice.borsdata.se:443 "GET /v1/instruments/3/kpis/36/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None
+DEBUG    https://apiservice.borsdata.se:443 "GET /v1/instruments/461/kpis/36/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None
+DEBUG    Starting new HTTPS connection (1): apiservice.borsdata.se:443
+DEBUG    https://apiservice.borsdata.se:443 "GET /v1/instruments/461/kpis/2/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None
+INFO     Index: 462, Name: Fiskars
+DEBUG    Starting new HTTPS connection (1): apiservice.borsdata.se:443
+DEBUG    https://apiservice.borsdata.se:443 "GET /v1/instruments/462/kpis/36/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None
+DEBUG    Starting new HTTPS connection (1): apiservice.borsdata.se:443
+DEBUG    https://apiservice.borsdata.se:443 "GET /v1/instruments/462/kpis/2/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None
+INFO     Index: 464, Name: Huhtamäki
+DEBUG    Starting new HTTPS connection (1): apiservice.borsdata.se:443
+DEBUG    https://apiservice.borsdata.se:443 "GET /v1/instruments/464/kpis/36/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None
+ERROR    Error fetching ROIC data for instrument 464: 2019
+DEBUG    Starting new HTTPS connection (1): apiservice.borsdata.se:443
+DEBUG    https://apiservice.borsdata.se:443 "GET /v1/instruments/464/kpis/2/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None
+ERROR    Error fetching Price-to-Earnings data for instrument: 464, company: Huhtamäki, 2019
+INFO     Index: 465, Name: Kemira
+DEBUG    Starting new HTTPS connection (1): apiservice.borsdata.se:443
+DEBUG    https://apiservice.borsdata.se:443 "GET /v1/instruments/465/kpis/36/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None
+DEBUG    Starting new HTTPS connection (1): apiservice.borsdata.se:443
+DEBUG    https://apiservice.borsdata.se:443 "GET /v1/instruments/465/kpis/2/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None
