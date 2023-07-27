@@ -2,10 +2,11 @@ from borsdata.borsdata_api import BorsdataAPI
 from borsdata import constants as constants
 import pandas as pd
 import json
+import numpy as np
 
 from borsdata.borsdata_client import BorsdataClient
 
-ROIC_ID = 37
+ROIC_ID = 36
 PRICE_PER_EARNINGS_ID = 2
 MARKET_CAP_ID = 49
 API_KEY = constants.API_KEY
@@ -82,6 +83,22 @@ def rank_by_magic_formula(df):
     #df_sorted.to_json('output_file.json', orient='records')
     return df_sorted 
 
+def get_price_data_for_all_instruments(df):
+    prices_df = pd.DataFrame()
+    insId_list = [ins_id for ins_id in df.index]
+    try:
+        price_data = BorsAPI.get_instrument_stock_prices_list([insId_list])
+        prices_df = pd.concat([prices_df, price_data])
+    except Exception as e:
+        print(f"Error fetching price data for instrument {insId_list}: {e}")
+
+    return prices_df
+
+companies = filter_instruments()  # replace this with your list of IDs
+
+prices_df = get_price_data_for_all_instruments(companies)
+prices_df.to_json('output_file_price.json')
+
 def main():
     try:
         companies = BorsAPI.get_instruments()
@@ -96,9 +113,24 @@ def main():
         return None
 
 if __name__ == "__main__":
+    df = filter_instruments
+
     #main()
     #BorsAPI.get_kpi_history(10, 27, "year", "mean")
     #BorsAPI.get_kpi_summary(10, "year")
-    instruments = filter_instruments()
-    instruments = rank_by_magic_formula(instruments)
-    instruments.to_json('output_file.json', orient='records')
+    #instruments = filter_instruments()
+    #instruments = rank_by_magic_formula(instruments)
+    #instruments.to_json('output_file.json', orient='records')
+
+    #pris = BorsAPI.get_instrument_stock_prices_list([2, 3, 4, 5])
+    #pris.to_json('output_file_price.json')
+    print()
+
+    
+
+
+
+
+
+
+
