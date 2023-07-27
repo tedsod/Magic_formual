@@ -1,8 +1,16 @@
+from cmath import log
+from re import I
 from borsdata.borsdata_api import BorsdataAPI
 from borsdata import constants as constants
 import pandas as pd
 import json
 import numpy as np
+import logging
+from logger_setup import setup_logger
+
+# Call the setup_logger function to get the configured logger
+logger = setup_logger()
+
 
 from borsdata.borsdata_client import BorsdataClient
 
@@ -20,25 +28,38 @@ Sector: Energi osv
 '''
 
 def filter_instruments():
+    allowed_caps = ["Large Cap", "Mid Cap"]
+    not_allowed_sectors = ["Finans & Fastighet", "Dagligvaror", "Energi", "Kraftförsörjning"]
+
     countries = BorsAPI.get_countries()
     countries.rename(columns={"name": "Country"}, inplace=True)
-    #branches = BorsAPI.get_branches()
 
     sectors = BorsAPI.get_sectors()
     sectors.rename(columns={"name": "Sector"}, inplace=True)
-    print(sectors)
+
     markets = BorsAPI.get_markets().drop("countryId", axis=1)
     markets.rename(columns={"name": "Cap"}, inplace=True)
 
     instruments = BorsAPI.get_instruments()
-    instruments = instruments.head(10)
 
     instruments = instruments.merge(markets, left_on='marketId', right_on='id', how='left')
     instruments = instruments.merge(sectors, left_on='sectorId', right_on='id', how='left')
-    #instruments = instruments.merge(branches, left_on='branchId', right_on='id', how='left')
     instruments = instruments.merge(countries, left_on='countryId', right_on='id', how='left')
-    #print(instruments)
-    #instruments.to_json('output_file.json', orient='records')
+
+    #Only include Large and Mid Cap
+    filtered_instruments = instruments["Cap"].isin(allowed_caps)
+    instruments = instruments[filtered_instruments]
+
+    #only include allowed sectors
+    filtered_instruments = ~instruments['Sector'].isin(not_allowed_sectors)
+    instruments = instruments[filtered_instruments]
+
+    #instruments = instruments.head(5)
+
+    logging.info(f"Number of Companies: {len(instruments)}")
+
+        
+        
     return instruments
 
 def find_kpi_id_by_name(kpi_name):
@@ -47,22 +68,26 @@ def find_kpi_id_by_name(kpi_name):
         json_data = json.load(json_file)
     return json_data[kpi_name]
 
-def rank_by_magic_formula(df):
+def rank_by_magic_formula(df, year):
     ROIC_LIST = []
     EY_LIST = []
-    for insId in df.index:
+
+    for index, insId in df.iterrows():
+        logging.info(f"Index: {index}, Name: {insId['name']}")
         try:
-            ROIC = BorsAPI.get_kpi_data_instrument(ins_id=insId, kpi_id=ROIC_ID, calc_group="1year", calc="mean")
-            ROIC_LIST.append(ROIC["valueNum"].iloc[0])
+            roc_history = BorsAPI.get_kpi_history(ins_id=index, kpi_id=ROIC_ID, report_type="year", price_type="mean")
+            ROIC = roc_history.loc[year].iloc[1]
+            ROIC_LIST.append(ROIC)
         except Exception as e:
-            print(f"Error fetching ROIC data for instrument {insId}: {e}")
+            logging.error(f"Error fetching ROIC data for instrument {index}: {e}")
             ROIC_LIST.append(None)
 
         try:
-            PE = BorsAPI.get_kpi_data_instrument(ins_id=insId, kpi_id=PRICE_PER_EARNINGS_ID, calc_group="1year", calc="mean")
-            EY_LIST.append(1 / PE["valueNum"].iloc[0])
+            pe_history  = BorsAPI.get_kpi_history(ins_id=index, kpi_id=PRICE_PER_EARNINGS_ID, report_type="year", price_type="mean")
+            PE = pe_history.loc[year].iloc[1]
+            EY_LIST.append(1 / PE)
         except Exception as e:
-            print(f"Error fetching Price-to-Earnings data for instrument {insId}: {e}")
+            logging.error(f"Error fetching Price-to-Earnings data for instrument {index}: {e}")
             EY_LIST.append(None)
 
     df["ROIC"] = ROIC_LIST
@@ -78,10 +103,9 @@ def rank_by_magic_formula(df):
     df['Magic Formula Rank'] = magic_formula_rank
 
     # Sort the DataFrame based on the Magic Formula Rank
-    df_sorted = df.sort_values(by='Magic Formula Rank')
-    print(df_sorted)
+    df = df.sort_values(by='Magic Formula Rank')
     #df_sorted.to_json('output_file.json', orient='records')
-    return df_sorted 
+    return df 
 
 def get_price_data_for_all_instruments(df):
     prices_df = pd.DataFrame()
@@ -90,14 +114,14 @@ def get_price_data_for_all_instruments(df):
         price_data = BorsAPI.get_instrument_stock_prices_list([insId_list])
         prices_df = pd.concat([prices_df, price_data])
     except Exception as e:
-        print(f"Error fetching price data for instrument {insId_list}: {e}")
+        logging.error(f"Error fetching price data for instrument {insId_list}: {e}")
 
     return prices_df
 
-companies = filter_instruments()  # replace this with your list of IDs
+#companies = filter_instruments()  # replace this with your list of IDs
 
-prices_df = get_price_data_for_all_instruments(companies)
-prices_df.to_json('output_file_price.json')
+#prices_df = get_price_data_for_all_instruments(companies)
+#prices_df.to_json('output/output_file_price.json')
 
 def main():
     try:
@@ -109,28 +133,14 @@ def main():
         return None
 
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logging.error(f"An error occurred: {e}")
         return None
 
 if __name__ == "__main__":
     df = filter_instruments
 
     #main()
-    #BorsAPI.get_kpi_history(10, 27, "year", "mean")
-    #BorsAPI.get_kpi_summary(10, "year")
-    #instruments = filter_instruments()
-    #instruments = rank_by_magic_formula(instruments)
-    #instruments.to_json('output_file.json', orient='records')
-
-    #pris = BorsAPI.get_instrument_stock_prices_list([2, 3, 4, 5])
-    #pris.to_json('output_file_price.json')
-    print()
-
+    instruments = filter_instruments()
+    instruments = rank_by_magic_formula(instruments, 2019)
     
-
-
-
-
-
-
-
+    instruments.to_json('output/output_file.json', orient='records')

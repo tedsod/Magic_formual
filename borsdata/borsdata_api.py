@@ -211,8 +211,9 @@ class BorsdataAPI:
         json_data = self._call_api(url)
         df = pd.json_normalize(json_data["values"])
         df.rename(columns={"y": "year", "p": "period", "v": "kpiValue"}, inplace=True)
-        self._set_index(df, ["year", "period"], ascending=False)
+        self._set_index(df, ["year"], ascending=False)
         return df
+
 
     def get_kpi_summary(self, ins_id, report_type, max_count=None):
         """
@@ -232,10 +233,12 @@ class BorsdataAPI:
             inplace=True,
         )
         df = df.pivot_table(
-            index=["year", "period"], columns="kpiId", values="kpiValue"
-        )
-        self._set_index(df, ["year", "period"], ascending=False)
+            index="year", columns="kpiId", values="kpiValue"
+        ).reset_index()
+        df.columns.name = None  # remove the name of columns
+        self._set_index(df, "year", ascending=False)
         return df
+
 
     def get_kpi_data_instrument(self, ins_id, kpi_id, calc_group, calc):
         """

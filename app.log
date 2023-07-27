@@ -1,0 +1,85 @@
+2023-07-27 22:37:10,597 - DEBUG - matplotlib data path: /Users/tedsoderberg/Magic_formual/venv/lib/python3.10/site-packages/matplotlib/mpl-data - Line 305
+2023-07-27 22:37:10,599 - DEBUG - CONFIGDIR=/Users/tedsoderberg/.matplotlib - Line 305
+2023-07-27 22:37:10,600 - DEBUG - interactive is False - Line 1479
+2023-07-27 22:37:10,600 - DEBUG - platform is darwin - Line 1480
+2023-07-27 22:37:10,635 - DEBUG - CACHEDIR=/Users/tedsoderberg/.matplotlib - Line 305
+2023-07-27 22:37:10,636 - DEBUG - Using fontManager instance from /Users/tedsoderberg/.matplotlib/fontlist-v330.json - Line 1543
+2023-07-27 22:37:10,733 - DEBUG - Starting new HTTPS connection (1): apiservice.borsdata.se:443 - Line 1048
+2023-07-27 22:37:11,001 - DEBUG - https://apiservice.borsdata.se:443 "GET /v1/countries?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None - Line 546
+2023-07-27 22:37:11,111 - DEBUG - Starting new HTTPS connection (1): apiservice.borsdata.se:443 - Line 1048
+2023-07-27 22:37:11,322 - DEBUG - https://apiservice.borsdata.se:443 "GET /v1/sectors?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None - Line 546
+2023-07-27 22:37:11,426 - DEBUG - Starting new HTTPS connection (1): apiservice.borsdata.se:443 - Line 1048
+2023-07-27 22:37:11,639 - DEBUG - https://apiservice.borsdata.se:443 "GET /v1/markets?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None - Line 546
+2023-07-27 22:37:11,747 - DEBUG - Starting new HTTPS connection (1): apiservice.borsdata.se:443 - Line 1048
+2023-07-27 22:37:12,052 - DEBUG - https://apiservice.borsdata.se:443 "GET /v1/instruments?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None - Line 546
+2023-07-27 22:37:12,274 - DEBUG - Starting new HTTPS connection (1): apiservice.borsdata.se:443 - Line 1048
+2023-07-27 22:37:12,397 - DEBUG - https://apiservice.borsdata.se:443 "GET /v1/instruments/1/kpis/36/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None - Line 546
+2023-07-27 22:37:12,398 - ERROR - Error fetching ROIC data for instrument 1: 2019 - Line 85
+2023-07-27 22:37:12,502 - DEBUG - Starting new HTTPS connection (1): apiservice.borsdata.se:443 - Line 1048
+2023-07-27 22:37:12,606 - DEBUG - https://apiservice.borsdata.se:443 "GET /v1/instruments/1/kpis/2/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None - Line 546
+2023-07-27 22:37:12,609 - ERROR - Error fetching Price-to-Earnings data for instrument 1: 2019 - Line 93
+2023-07-27 22:37:12,712 - DEBUG - Starting new HTTPS connection (1): apiservice.borsdata.se:443 - Line 1048
+2023-07-27 22:37:12,883 - DEBUG - https://apiservice.borsdata.se:443 "GET /v1/instruments/3/kpis/36/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None - Line 546
+2023-07-27 22:37:12,996 - DEBUG - Starting new HTTPS connection (1): apiservice.borsdata.se:443 - Line 1048
+2023-07-27 22:37:13,139 - DEBUG - https://apiservice.borsdata.se:443 "GET /v1/instruments/3/kpis/2/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None - Line 546
+2023-07-27 22:37:13,251 - DEBUG - Starting new HTTPS connection (1): apiservice.borsdata.se:443 - Line 1048
+2023-07-27 22:37:13,390 - DEBUG - https://apiservice.borsdata.se:443 "GET /v1/instruments/4/kpis/36/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None - Line 546
+2023-07-27 22:37:13,398 - ERROR - Error fetching ROIC data for instrument 4: 2019 - Line 85
+2023-07-27 22:37:13,499 - DEBUG - Starting new HTTPS connection (1): apiservice.borsdata.se:443 - Line 1048
+2023-07-27 22:37:13,740 - DEBUG - https://apiservice.borsdata.se:443 "GET /v1/instruments/4/kpis/2/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None - Line 546
+2023-07-27 22:37:13,748 - ERROR - Error fetching Price-to-Earnings data for instrument 4: 2019 - Line 93
+2023-07-27 22:37:13,857 - DEBUG - Starting new HTTPS connection (1): apiservice.borsdata.se:443 - Line 1048
+2023-07-27 22:37:14,156 - DEBUG - https://apiservice.borsdata.se:443 "GET /v1/instruments/5/kpis/36/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None - Line 546
+2023-07-27 22:37:14,162 - ERROR - Error fetching ROIC data for instrument 5: 2019 - Line 85
+2023-07-27 22:37:14,271 - DEBUG - Starting new HTTPS connection (1): apiservice.borsdata.se:443 - Line 1048
+2023-07-27 22:37:14,375 - DEBUG - https://apiservice.borsdata.se:443 "GET /v1/instruments/5/kpis/2/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None - Line 546
+2023-07-27 22:37:14,379 - ERROR - Error fetching Price-to-Earnings data for instrument 5: 2019 - Line 93
+2023-07-27 22:37:14,484 - DEBUG - Starting new HTTPS connection (1): apiservice.borsdata.se:443 - Line 1048
+2023-07-27 22:37:14,632 - DEBUG - https://apiservice.borsdata.se:443 "GET /v1/instruments/8/kpis/36/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None - Line 546
+2023-07-27 22:37:14,746 - DEBUG - Starting new HTTPS connection (1): apiservice.borsdata.se:443 - Line 1048
+2023-07-27 22:37:14,870 - DEBUG - https://apiservice.borsdata.se:443 "GET /v1/instruments/8/kpis/2/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None - Line 546
+2023-07-27 22:37:55,049 - DEBUG - matplotlib data path: /Users/tedsoderberg/Magic_formual/venv/lib/python3.10/site-packages/matplotlib/mpl-data - Line 305
+2023-07-27 22:37:55,053 - DEBUG - CONFIGDIR=/Users/tedsoderberg/.matplotlib - Line 305
+2023-07-27 22:37:55,054 - DEBUG - interactive is False - Line 1479
+2023-07-27 22:37:55,054 - DEBUG - platform is darwin - Line 1480
+2023-07-27 22:37:55,090 - DEBUG - CACHEDIR=/Users/tedsoderberg/.matplotlib - Line 305
+2023-07-27 22:37:55,091 - DEBUG - Using fontManager instance from /Users/tedsoderberg/.matplotlib/fontlist-v330.json - Line 1543
+2023-07-27 22:37:55,185 - DEBUG - Starting new HTTPS connection (1): apiservice.borsdata.se:443 - Line 1048
+2023-07-27 22:37:55,305 - DEBUG - https://apiservice.borsdata.se:443 "GET /v1/countries?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None - Line 546
+2023-07-27 22:37:55,412 - DEBUG - Starting new HTTPS connection (1): apiservice.borsdata.se:443 - Line 1048
+2023-07-27 22:37:55,516 - DEBUG - https://apiservice.borsdata.se:443 "GET /v1/sectors?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None - Line 546
+2023-07-27 22:37:55,623 - DEBUG - Starting new HTTPS connection (1): apiservice.borsdata.se:443 - Line 1048
+2023-07-27 22:37:55,767 - DEBUG - https://apiservice.borsdata.se:443 "GET /v1/markets?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None - Line 546
+2023-07-27 22:37:55,875 - DEBUG - Starting new HTTPS connection (1): apiservice.borsdata.se:443 - Line 1048
+2023-07-27 22:37:56,038 - DEBUG - https://apiservice.borsdata.se:443 "GET /v1/instruments?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None - Line 546
+2023-07-27 22:37:56,181 - INFO - Index: 1, Name: ABB - Line 79
+2023-07-27 22:37:56,261 - DEBUG - Starting new HTTPS connection (1): apiservice.borsdata.se:443 - Line 1048
+2023-07-27 22:37:56,366 - DEBUG - https://apiservice.borsdata.se:443 "GET /v1/instruments/1/kpis/36/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None - Line 546
+2023-07-27 22:37:56,370 - ERROR - Error fetching ROIC data for instrument 1: 2019 - Line 85
+2023-07-27 22:37:56,478 - DEBUG - Starting new HTTPS connection (1): apiservice.borsdata.se:443 - Line 1048
+2023-07-27 22:37:56,595 - DEBUG - https://apiservice.borsdata.se:443 "GET /v1/instruments/1/kpis/2/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None - Line 546
+2023-07-27 22:37:56,603 - ERROR - Error fetching Price-to-Earnings data for instrument 1: 2019 - Line 93
+2023-07-27 22:37:56,603 - INFO - Index: 3, Name: Addnode - Line 79
+2023-07-27 22:37:56,709 - DEBUG - Starting new HTTPS connection (1): apiservice.borsdata.se:443 - Line 1048
+2023-07-27 22:37:56,856 - DEBUG - https://apiservice.borsdata.se:443 "GET /v1/instruments/3/kpis/36/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None - Line 546
+2023-07-27 22:37:56,968 - DEBUG - Starting new HTTPS connection (1): apiservice.borsdata.se:443 - Line 1048
+2023-07-27 22:37:57,107 - DEBUG - https://apiservice.borsdata.se:443 "GET /v1/instruments/3/kpis/2/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None - Line 546
+2023-07-27 22:37:57,113 - INFO - Index: 4, Name: Addtech - Line 79
+2023-07-27 22:37:57,220 - DEBUG - Starting new HTTPS connection (1): apiservice.borsdata.se:443 - Line 1048
+2023-07-27 22:37:57,332 - DEBUG - https://apiservice.borsdata.se:443 "GET /v1/instruments/4/kpis/36/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None - Line 546
+2023-07-27 22:37:57,338 - ERROR - Error fetching ROIC data for instrument 4: 2019 - Line 85
+2023-07-27 22:37:57,444 - DEBUG - Starting new HTTPS connection (1): apiservice.borsdata.se:443 - Line 1048
+2023-07-27 22:37:57,554 - DEBUG - https://apiservice.borsdata.se:443 "GET /v1/instruments/4/kpis/2/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None - Line 546
+2023-07-27 22:37:57,558 - ERROR - Error fetching Price-to-Earnings data for instrument 4: 2019 - Line 93
+2023-07-27 22:37:57,558 - INFO - Index: 5, Name: Alfa Laval - Line 79
+2023-07-27 22:37:57,661 - DEBUG - Starting new HTTPS connection (1): apiservice.borsdata.se:443 - Line 1048
+2023-07-27 22:37:57,763 - DEBUG - https://apiservice.borsdata.se:443 "GET /v1/instruments/5/kpis/36/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None - Line 546
+2023-07-27 22:37:57,765 - ERROR - Error fetching ROIC data for instrument 5: 2019 - Line 85
+2023-07-27 22:37:57,869 - DEBUG - Starting new HTTPS connection (1): apiservice.borsdata.se:443 - Line 1048
+2023-07-27 22:37:57,986 - DEBUG - https://apiservice.borsdata.se:443 "GET /v1/instruments/5/kpis/2/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None - Line 546
+2023-07-27 22:37:57,987 - ERROR - Error fetching Price-to-Earnings data for instrument 5: 2019 - Line 93
+2023-07-27 22:37:57,987 - INFO - Index: 8, Name: Assa Abloy - Line 79
+2023-07-27 22:37:58,093 - DEBUG - Starting new HTTPS connection (1): apiservice.borsdata.se:443 - Line 1048
+2023-07-27 22:37:58,236 - DEBUG - https://apiservice.borsdata.se:443 "GET /v1/instruments/8/kpis/36/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None - Line 546
+2023-07-27 22:37:58,349 - DEBUG - Starting new HTTPS connection (1): apiservice.borsdata.se:443 - Line 1048
+2023-07-27 22:37:58,498 - DEBUG - https://apiservice.borsdata.se:443 "GET /v1/instruments/8/kpis/2/year/mean/history?authKey=384a72849f8941e0b4c5242c9f010873&maxYearCount=20&maxR12QCount=40&maxCount=20 HTTP/1.1" 200 None - Line 546
