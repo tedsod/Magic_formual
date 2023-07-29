@@ -1,10 +1,7 @@
-from cmath import log
 import os
-from readline import read_init_file
 from borsdata.borsdata_api import BorsdataAPI
 from borsdata import constants as constants
 import pandas as pd
-import json
 import numpy as np
 import logging
 from logging_setup import logger
@@ -20,6 +17,7 @@ MARKET_CAP_ID = 49
 API_KEY = constants.API_KEY
 BorsAPI = BorsdataAPI(API_KEY)
 BorsClient = BorsdataClient()
+years = list(range(2024, 2003, -1))  # Goes from 2024 to 2004
 
 '''
 Markets: OMX Stockholm
@@ -62,26 +60,16 @@ def filter_instruments():
     filtered_instruments = instruments["Country"] == "Sverige"
     instruments = instruments[filtered_instruments]
 
-    #instruments = instruments.head(100)
+    #instruments = instruments.head(5)
 
     logging.info(f"Number of Companies: {len(instruments)}")
 
     return instruments
 
 
-def find_kpi_id_by_name(kpi_name):
-    # Replace with the actual path to your JSON file
-    json_file_path = 'KPI_table.json'
-    with open(json_file_path, 'r') as json_file:
-        json_data = json.load(json_file)
-    return json_data[kpi_name]
-
-
-def rank_by_magic_formula(df, year=None):
-    years = list(range(2024, 2003, -1))  # Goes from 2024 to 2004
+def get_kpi_data(df):
     ROC_dictionary = {}
     EY_dictionary = {}
-    best_ranked_by_year = {}
 
     for index, insId in df.iterrows():
         logging.info(f"Index: {index}, Name: {insId['name']}")
@@ -115,12 +103,18 @@ def rank_by_magic_formula(df, year=None):
                 else:
                     EY_dictionary[year] = [ey]
 
-            # ROIC = roc_history.loc[year].iloc[1]
-            # ROIC_LIST.append(ROIC)
         except Exception as e:
             logging.error(
                 f"Error fetching ROIC data for instrument {index}: {e}")
+    return EY_dictionary, ROC_dictionary
 
+def rank_by_magic_formula(df, year=None):
+    EY_dictionary, ROC_dictionary = get_kpi_data(df)
+    best_ranked_by_year = calculate_ranks(df, EY_dictionary, ROC_dictionary)
+    return best_ranked_by_year
+
+def calculate_ranks(df, ROC_dictionary, EY_dictionary, year=None):
+    best_ranked_by_year = {}
     for year in years:
         ROC = ROC_dictionary[year]
         EY = EY_dictionary[year]
@@ -139,12 +133,19 @@ def rank_by_magic_formula(df, year=None):
         # Sort the DataFrame based on the Magic Formula Rank
         df = df.sort_values(by='Magic Formula Rank')
         best_ranked_by_year[year] = df.head(10).index.to_list()
-        folder_name = "companies_rank"
-        df.to_json(f'{folder_name}/magic_rank_{int(year)}.json', orient='records')
-        if not os.path.exists(folder_name):
-            os.makedirs(folder_name)
+        save_rankings_to_file(df)
     logging.error(best_ranked_by_year)
     return best_ranked_by_year
+
+def save_rankings_to_file(df):
+    folder_name = "companies_rank"
+    if not os.path.exists(folder_name):
+        os.makedirs(folder_name)
+
+    for year in years:
+        df.reset_index().to_json(f'{folder_name}/magic_rank_{int(year)}.json', orient='records')
+    
+    return None
 
 def calculate_annual_return(df, year):
     df['date'] = pd.to_datetime(df['date'])  # Ensure 'date' column is in datetime format
@@ -196,8 +197,6 @@ def get_price_data_for_all_instruments(insId_list, year):
         raise e
 
     return prices_df
-
-
 
 def main():
     try:

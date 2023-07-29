@@ -4,3 +4,5 @@
 
 constants.py
 /companies_rank
+debug.log
+app.log
