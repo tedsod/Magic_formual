@@ -16,6 +16,7 @@ class InstrumentAnalyzer:
     ROIC_ID = 36
     PRICE_PER_EARNINGS_ID = 2
     API_KEY = constants.API_KEY
+    annual_returns = []
 
     def __init__(self, number_of_companies, year_range, kpi_to_consider):
         self.BorsAPI = BorsdataAPI(self.API_KEY)
@@ -63,8 +64,8 @@ class InstrumentAnalyzer:
         instruments = self.filter_by_cap(instruments, allowed_caps)
         instruments = self.filter_by_sector(instruments, not_allowed_sectors)
         instruments = self.filter_by_country(instruments)
-
-        instruments = instruments.head(self.number_of_companies)
+        if self.number_of_companies != None:
+            instruments = instruments.head(self.number_of_companies)
         logging.info(f"Number of Companies: {len(instruments)}")
         return instruments
 
@@ -109,9 +110,6 @@ class InstrumentAnalyzer:
                 # Append to the main dataframe
                 kpi_dataframe = pd.concat([kpi_dataframe, reshaped_data.set_index('company_id', append=True).swaplevel(0, 1)])
 
-
-                print(kpi_dataframe)
-
             except Exception as e:
                 logging.error(f"Error fetching ROIC data for Index: {company_id}, Name: {insId['name']}: {e}")
                 raise e
@@ -120,6 +118,7 @@ class InstrumentAnalyzer:
 
     def rank_by_magic_formula(self, df):
         kpi_dataframe = self.process_kpi_data(df)
+        logging.info(kpi_dataframe)
         rank = self.calculate_ranks(df, kpi_data=kpi_dataframe)
         return rank
 
@@ -142,11 +141,11 @@ class InstrumentAnalyzer:
 
             # Update main df with ROC and Earnings Yield for the current year
             df["ROC"] = year_data["ROC"]
-            df["Earnings Yield"] = year_data.get("Earnings Yield", year_data.get("EY"))  # Use either "EY" or "Earnings Yield", whichever is present
-
+            df["1/PE"] = year_data.get("Earnings Yield", year_data.get("EY"))  # Use either "EY" or "Earnings Yield", whichever is present
+            df["EBIT/EV"] = year_data["EBIT/EV"]
             # Rank companies based on ROC and Earnings Yield
             roic_rank = df['ROC'].rank(ascending=False)
-            ey_rank = df['Earnings Yield'].rank(ascending=False)
+            ey_rank = df['EBIT/EV'].rank(ascending=False)
 
             # Calculate the Magic Formula Rank
             magic_formula_rank = roic_rank + ey_rank
@@ -160,7 +159,6 @@ class InstrumentAnalyzer:
 
             # Save rankings
             self.save_rankings_to_file(df)
-
         logging.error(best_ranked_by_year)
         return best_ranked_by_year
 
@@ -208,7 +206,7 @@ class InstrumentAnalyzer:
         # If you want to return the average annual return across all stocks:
         average_annual_return = annual_returns.mean()
         logging.info(f'The average annual return across all stocks in {year} is {average_annual_return * 100:.2f}%')
-
+        self.annual_returns.append(average_annual_return)
         return annual_returns
 
     def get_price_data_for_all_instruments(self, insId_list, year):
@@ -224,6 +222,16 @@ class InstrumentAnalyzer:
 
         return None
 
+    def plot(self, df):
+        plt.figure(figsize=(10, 6))
+        plt.plot(self.years, self.annual_returns, color='blue', linewidth=1.5)
+        plt.xlabel('Date')
+        plt.ylabel('Annual Portfolio Return')
+        plt.title('Annual Portfolio Return Over Time')
+        plt.grid(True)
+        plt.tight_layout()
+        plt.show()
+
     def main(self):
         try:
             instruments = self.filter_instruments()
@@ -231,6 +239,7 @@ class InstrumentAnalyzer:
             for year, ranking in magic_rank.items():
                 self.get_price_data_for_all_instruments(ranking, year)
             self.portfolio.to_json("test.json", orient="records")
+            self.plot(instruments)
             return None
 
         except Exception as e:
@@ -239,5 +248,5 @@ class InstrumentAnalyzer:
 
 
 if __name__ == "__main__":
-    analyzer = InstrumentAnalyzer(number_of_companies=10, year_range=[2021, 2019], kpi_to_consider={"ROC": 36, "PE": 2})
+    analyzer = InstrumentAnalyzer(number_of_companies=10, year_range=[2023, 2019], kpi_to_consider={"ROC": 36, "PE": 2, "EBIT/EV": 17})
     analyzer.main()
