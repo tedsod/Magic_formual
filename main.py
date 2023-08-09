@@ -1,4 +1,5 @@
 import os
+import matplotlib.pylab as plt
 from borsdata.borsdata_api import BorsdataAPI
 from borsdata import constants as constants
 import pandas as pd
@@ -24,6 +25,7 @@ Markets: OMX Stockholm
 Sector: Energi osv
 
 '''
+
 
 
 def filter_instruments():
@@ -60,12 +62,11 @@ def filter_instruments():
     filtered_instruments = instruments["Country"] == "Sverige"
     instruments = instruments[filtered_instruments]
 
-    #instruments = instruments.head(5)
+    instruments = instruments.head(10)
 
     logging.info(f"Number of Companies: {len(instruments)}")
 
     return instruments
-
 
 def get_kpi_data(df):
     ROC_dictionary = {}
@@ -148,6 +149,7 @@ def save_rankings_to_file(df):
     return None
 
 def calculate_annual_return(df, year):
+    df = df.copy()
     df['date'] = pd.to_datetime(df['date'])  # Ensure 'date' column is in datetime format
     df.set_index('date', inplace=True)  # Set 'date' as the DataFrame's index
 
@@ -183,27 +185,85 @@ def calculate_annual_return(df, year):
 
     return annual_returns
 
-
-
-def get_price_data_for_all_instruments(insId_list, year):
+def get_price_data_for_all_instruments(insId_list, year, portfolio):
     try:
         prices_df = BorsAPI.get_instrument_stock_prices_list(insId_list)
         logging.info(f"Top ranked stocks year: {year} - {insId_list}")
         logging.error(f"Found stock prices for companies {prices_df.stock_id.unique().tolist()}")
         calculate_annual_return(prices_df, year)
+        portfolio = pd.concat([portfolio, get_year_data(prices_df, year)], axis=0)
     except Exception as e:
         logging.error(
             f"Error fetching price data for instrument {insId_list}: {e}")
         raise e
 
-    return prices_df
+    return portfolio
+
+def get_year_data(df, year):
+    # Convert 'date' column to datetime format if needed
+    df['date'] = pd.to_datetime(df['date'])
+
+    # Filter the DataFrame for the desired year (using boolean indexing)
+    df_year = df[df['date'].dt.year == year]
+
+    # Call portfolio_return function to calculate the portfolio return for the year
+    if df_year.empty:
+        return None
+    else:
+        return portfolio_return(df_year, year)
+
+def portfolio_return(df, year):
+    # Assuming you have a DataFrame called 'df' with the stock price data
+    # Selecting only the necessary columns for the new DataFrame
+    df_prices = df[['date', 'open', 'close', 'stock_id']].copy()
+    # Renaming the 'open' and 'close' columns to the respective stock_id
+    df_prices.rename(columns={'open': 'stock_open', 'close': 'stock_close'}, inplace=True)
+
+    # Pivot the DataFrame to have stock_id as columns and date as the index
+    df_pivot = df_prices.pivot(index='date', columns='stock_id')
+    # Calculate the daily returns for each stock
+    df_returns = (df_pivot['stock_close'] - df_pivot['stock_open']) / df_pivot['stock_open']
+    # Calculate the portfolio's daily return as the mean of individual stock returns
+    df_returns['portfolio_return'] = df_returns.mean(axis=1)
+    df_returns['portfolio_growth'] = 1 + df_returns['portfolio_return']
+
+    # Group by year and calculate annual growth
+    annual_growth = df_returns['portfolio_growth'].resample('Y').prod()
+
+    # Create a new DataFrame with Date as the index and 'portfolio_return' as a new column
+    annual_return = annual_growth - 1
+    annual_return_year = annual_return[str(year)].values[0]
+
+    # Calculate cumulative return
+    df_returns['cumulative_return'] = df_returns['portfolio_growth'].cumprod()
+
+    df_portfolio_return = df_returns[['portfolio_return', 'cumulative_return']].copy()
+
+    logging.info(f"The annual return in {year} is {annual_return_year*100}%")
+    return df_portfolio_return
+
+
+def plot(df):
+    plt.figure(figsize=(10, 6))
+    plt.plot(df.index.to_list(), df['cumulative_return'], color='blue', linewidth=1.5)
+    plt.xlabel('Date')
+    plt.ylabel('Daily Portfolio Return')
+    plt.title('Daily Portfolio Return Over Time')
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
+
+
 
 def main():
+    portfolio = pd.DataFrame()
     try:
         instruments = filter_instruments()
         magic_rank = rank_by_magic_formula(instruments)
         for year, ranking in magic_rank.items():
-            get_price_data_for_all_instruments(ranking, year)
+            portfolio = get_price_data_for_all_instruments(ranking, year, portfolio)
+        portfolio.to_json("test.json", orient="records")
+        plot(portfolio)
         return None
 
     except Exception as e:

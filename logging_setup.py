@@ -22,7 +22,7 @@ def setup_logger():
     
     # Create formatters
     formatter_color = colorlog.ColoredFormatter(
-        "%(log_color)s%(levelname)-8s%(reset)s %(blue)s%(message)s",
+        "%(log_color)s%(levelname)-8s%(reset)s %(filename)s:%(lineno)d - %(blue)s%(message)s",
         datefmt=None,
         reset=True,
         log_colors={
@@ -34,7 +34,10 @@ def setup_logger():
         }
     )
 
-    formatter_plain = logging.Formatter("%(levelname)-8s %(message)s")
+
+
+    formatter_plain = logging.Formatter("%(levelname)-8s [%(asctime)s] %(filename)s:%(lineno)d - %(message)s")
+
 
     # Set the formatter for the file and stream handler
     fileh.setFormatter(formatter_plain)  # Plain formatter for file
