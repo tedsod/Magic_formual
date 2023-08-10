@@ -37,7 +37,7 @@ class BorsdataAPI:
         with open(file_path, 'w') as json_file:
             json_file.write(response.text) 
         '''
-        print(response.url)
+        #print(response.url)
         self._last_api_call = time.time()
         if response.status_code != 200:
             print(f"API-Error, status code: {response.status_code}")

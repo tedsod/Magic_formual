@@ -6,11 +6,8 @@ import pandas as pd
 import numpy as np
 import logging
 from logging_setup import logger
-
-# Call the setup_logger function to get the configured logger
-
 from borsdata.borsdata_client import BorsdataClient
-from main import rank_by_magic_formula
+from user_input import UserInput
 
 class InstrumentAnalyzer:
     ROIC_ID = 36
@@ -23,7 +20,7 @@ class InstrumentAnalyzer:
         self.BorsClient = BorsdataClient()
         self.portfolio = pd.DataFrame()
         self.number_of_companies = number_of_companies
-        self.years = list(range(year_range[0], year_range[1]-1, -1))  # Goes from ex 2024 to 2004
+        self.years = list(range(year_range[1], year_range[0]-1, -1))  # Goes from ex 2024 to 2004
         self.kpi_to_consider = kpi_to_consider
 
 
@@ -93,11 +90,6 @@ class InstrumentAnalyzer:
 
                 kpi_data = kpi_data[kpi_data.index.isin(self.years)]  # filter years
 
-                if "PE" in kpi_data.columns:
-                    kpi_data["Earnings Yield"] = np.where(kpi_data["PE"] != 0, 1 / kpi_data["PE"], 0)
-                else:
-                    print("PE column not found in kpi_data. Cannot compute Earnings Yield.")
-
                 # Reshape kpi_data for the current company
                 reshaped_data = kpi_data.drop(columns="period").stack().unstack(level=-2).T
 
@@ -116,51 +108,52 @@ class InstrumentAnalyzer:
 
         return kpi_dataframe
 
+
+
     def rank_by_magic_formula(self, df):
         kpi_dataframe = self.process_kpi_data(df)
         logging.info(kpi_dataframe)
         rank = self.calculate_ranks(df, kpi_data=kpi_dataframe)
         return rank
-
+    
+    def add_kpi_to_instrument_report(self, year, df, kpi_data):
+        year_data = kpi_data.xs(year, level='year')
+        #print(pd.concat([df, year_data], axis=1))
+        year_data = pd.concat([df, year_data], axis=1)
+        return year_data
+        
     def calculate_ranks(self, df, kpi_data):
         best_ranked_by_year = {}
-
         # Iterate over unique years in kpi_data
         for year in kpi_data.index.get_level_values('year').unique():
-            year_data = kpi_data.xs(year, level='year')
+            df_year = self.add_kpi_to_instrument_report(year, df.copy(), kpi_data)  # Create a copy of the original DataFrame
 
-            # Check if "ROC" column is present for the year
-            if "ROC" not in year_data:
-                logging.warning(f"'ROC' data not found for year {year}. Skipping ranking for this year.")
-                continue
+            # Rank companies based on ROC and Earnings Yield for this specific year
+            roic_rank = df_year['ROC'].rank(ascending=False)
+            ey_rank = df_year['EBIT/EV'].rank(ascending=False)
 
-            # Check if "Earnings Yield" or "EY" column is present for the year
-            if "Earnings Yield" not in year_data and "EY" not in year_data:
-                logging.warning(f"'Earnings Yield' data not found for year {year}. Skipping ranking for this year.")
-                continue
-
-            # Update main df with ROC and Earnings Yield for the current year
-            df["ROC"] = year_data["ROC"]
-            df["1/PE"] = year_data.get("Earnings Yield", year_data.get("EY"))  # Use either "EY" or "Earnings Yield", whichever is present
-            df["EBIT/EV"] = year_data["EBIT/EV"]
-            # Rank companies based on ROC and Earnings Yield
-            roic_rank = df['ROC'].rank(ascending=False)
-            ey_rank = df['EBIT/EV'].rank(ascending=False)
+            # Handle NaN values by filling them with a large number (adjust as needed)
+            roic_rank.fillna(float('inf'), inplace=True)
+            ey_rank.fillna(float('inf'), inplace=True)
 
             # Calculate the Magic Formula Rank
             magic_formula_rank = roic_rank + ey_rank
 
-            # Update main df with Magic Formula Rank
-            df['Magic Formula Rank'] = magic_formula_rank
+            # Update the copy of the DataFrame with Magic Formula Rank
+            df_year['Magic Formula Rank'] = magic_formula_rank
 
-            # Sort df based on Magic Formula Rank
-            df = df.sort_values(by='Magic Formula Rank')
-            best_ranked_by_year[year] = df.head(10).index.to_list()
+            # Sort df_year based on Magic Formula Rank
+            df_year = df_year.sort_values(by='Magic Formula Rank')
 
-            # Save rankings
-            self.save_rankings_to_file(df)
+            # Store the best ranked for this year
+            best_ranked_by_year[year] = df_year.head(10).index.to_list()
+
+            # Save rankings (you might want to consider saving outside the loop)
+            self.save_rankings_to_file(df_year)
+
         logging.error(best_ranked_by_year)
         return best_ranked_by_year
+
 
     def save_rankings_to_file(self, df):
         folder_name = "companies_rank"
@@ -248,5 +241,19 @@ class InstrumentAnalyzer:
 
 
 if __name__ == "__main__":
-    analyzer = InstrumentAnalyzer(number_of_companies=10, year_range=[2023, 2019], kpi_to_consider={"ROC": 36, "PE": 2, "EBIT/EV": 17})
+
+    user_input = UserInput()
+    year_range = user_input.get_year_range()
+    print(f"You chose the year range: {year_range[0]}-{year_range[1]}.")
+
+    companies = user_input.get_company_count()
+    if companies == "all":
+        print("You chose to consider all companies.")
+    else:
+        print(f"You chose to consider {companies} companies.")
+
+    selected_kpi_dict = user_input.select_kpis()
+    print(selected_kpi_dict)
+    analyzer = InstrumentAnalyzer(number_of_companies=companies, year_range=year_range, kpi_to_consider=selected_kpi_dict)
+    #analyzer = InstrumentAnalyzer(number_of_companies=5, year_range=[2021, 2022], kpi_to_consider={"ROC": 36, "PE": 2, "EBIT/EV": 17})
     analyzer.main()
