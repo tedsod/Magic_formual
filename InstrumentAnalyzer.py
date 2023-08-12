@@ -61,7 +61,7 @@ class InstrumentAnalyzer:
         instruments = self.filter_by_cap(instruments, allowed_caps)
         instruments = self.filter_by_sector(instruments, not_allowed_sectors)
         instruments = self.filter_by_country(instruments)
-        if self.number_of_companies != None:
+        if self.number_of_companies != 'all':
             instruments = instruments.head(self.number_of_companies)
         logging.info(f"Number of Companies: {len(instruments)}")
         return instruments
@@ -80,13 +80,14 @@ class InstrumentAnalyzer:
         kpi_dataframe = pd.DataFrame()
 
         for company_id, insId in df.iterrows():
-            logging.info(f"Index: {company_id}, Name: {insId['name']}")
             try:
                 kpi_data = self.get_kpi_data(company_id)
-                        
+
                 if kpi_data.empty:
-                    logging.error(f"No KPI data for {insId['name']}")
+                    logging.error(f"No KPI data for Index: {company_id}, Name: {insId['name']}")
                     continue
+
+                logging.info(f"Index: {company_id}, Name: {insId['name']}")
 
                 kpi_data = kpi_data[kpi_data.index.isin(self.years)]  # filter years
 
@@ -112,7 +113,7 @@ class InstrumentAnalyzer:
 
     def rank_by_magic_formula(self, df):
         kpi_dataframe = self.process_kpi_data(df)
-        logging.info(kpi_dataframe)
+        logging.info(kpi_dataframe.to_string())
         rank = self.calculate_ranks(df, kpi_data=kpi_dataframe)
         return rank
     
@@ -122,22 +123,21 @@ class InstrumentAnalyzer:
         year_data = pd.concat([df, year_data], axis=1)
         return year_data
         
+
     def calculate_ranks(self, df, kpi_data):
         best_ranked_by_year = {}
         # Iterate over unique years in kpi_data
         for year in kpi_data.index.get_level_values('year').unique():
             df_year = self.add_kpi_to_instrument_report(year, df.copy(), kpi_data)  # Create a copy of the original DataFrame
+            magic_formula_rank = 0
 
             # Rank companies based on ROC and Earnings Yield for this specific year
-            roic_rank = df_year['ROC'].rank(ascending=False)
-            ey_rank = df_year['EBIT/EV'].rank(ascending=False)
-
-            # Handle NaN values by filling them with a large number (adjust as needed)
-            roic_rank.fillna(float('inf'), inplace=True)
-            ey_rank.fillna(float('inf'), inplace=True)
-
-            # Calculate the Magic Formula Rank
-            magic_formula_rank = roic_rank + ey_rank
+            for column in kpi_data.columns:
+                rank = df_year[str(column)].rank(ascending=False)
+                # Handle NaN values by filling them with a large number (adjust as needed)
+                rank.fillna(float('inf'), inplace=True)
+                # Calculate the Magic Formula Rank
+                magic_formula_rank += rank
 
             # Update the copy of the DataFrame with Magic Formula Rank
             df_year['Magic Formula Rank'] = magic_formula_rank
@@ -254,6 +254,7 @@ if __name__ == "__main__":
 
     selected_kpi_dict = user_input.select_kpis()
     print(selected_kpi_dict)
+
     analyzer = InstrumentAnalyzer(number_of_companies=companies, year_range=year_range, kpi_to_consider=selected_kpi_dict)
     #analyzer = InstrumentAnalyzer(number_of_companies=5, year_range=[2021, 2022], kpi_to_consider={"ROC": 36, "PE": 2, "EBIT/EV": 17})
     analyzer.main()
