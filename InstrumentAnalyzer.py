@@ -8,6 +8,7 @@ import logging
 from logging_setup import logger
 from borsdata.borsdata_client import BorsdataClient
 from user_input import UserInput
+from plot_graph import IndexChangePlotter
 
 class InstrumentAnalyzer:
     ROIC_ID = 36
@@ -199,7 +200,7 @@ class InstrumentAnalyzer:
         # If you want to return the average annual return across all stocks:
         average_annual_return = annual_returns.mean()
         logging.info(f'The average annual return across all stocks in {year} is {average_annual_return * 100:.2f}%')
-        self.annual_returns.append(average_annual_return)
+        self.annual_returns.append(average_annual_return*100)
         return annual_returns
 
     def get_price_data_for_all_instruments(self, insId_list, year):
@@ -226,13 +227,14 @@ class InstrumentAnalyzer:
         plt.show()
 
     def main(self):
+        plotter = IndexChangePlotter()
         try:
             instruments = self.filter_instruments()
             magic_rank = self.rank_by_magic_formula(instruments)
             for year, ranking in magic_rank.items():
                 self.get_price_data_for_all_instruments(ranking, year)
             self.portfolio.to_json("test.json", orient="records")
-            self.plot(instruments)
+            plotter.plot(self.years, self.annual_returns)
             return None
 
         except Exception as e:

@@ -4,4 +4,4 @@ pandas
 requests
 openpyxl
 colorlog
-    
+seaborn
